@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+   <meta charSet="utf-8" />
+   <meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, shrink-to-fit=no, viewport-fit=cover'>
+   <meta http-equiv='X-UA-Compatible' content='ie=edge'>
+   <style>
+      .parent {
+          width: 100%;
+          height: 100%;
+          position: absolute;
+          top: 0;
+          left: 0;
+          overflow: auto;
+      }
+
+      .block {
+          width: 250px;
+          height: 250px;
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          margin: -125px 0 0 -125px;
+      }
+   </style>
+</head>
+
+<body>
+   <div class="parent">
+      <div class="block">
+        <a href="{{url_path}}"><button type="button">Войти через ЯндексID</button></a>
+      </div>
+   </div>
+</body>
+
+</html>
