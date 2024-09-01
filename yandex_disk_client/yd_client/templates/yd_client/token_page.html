@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>token page</title>
+    <script src="https://yastatic.net/s3/passport-sdk/autofill/v1/sdk-suggest-token-with-polyfills-latest.js"></script>
+</head>
+<body>
+    <script>
+        window.onload = function() {
+            let token = window.location.hash.match(/=\w*&/)[0].slice(1, -1)
+            window.location.href="{{request.get_absolute_uri}}" + "/client/get_files/" + token;
+        };
+    </script>
+</body>
+</html>

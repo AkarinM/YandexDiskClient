@@ -1,0 +1,26 @@
+{% extends 'yd_client/base.html' %}
+
+{% block title %}
+    Файлы
+{% endblock %}
+
+{% block body %}
+    <form action="" method="post">
+        {% csrf_token %}
+
+        {{ form }}
+
+        <input type="submit" value="Просмотреть ресурс" />
+    </form>
+
+    {% if main_items %}
+        <ol>
+            <li> {{main_items}}</li>
+            {% if items %}
+                {% for el in items %}
+                   <li> {{el}}</li>
+                {% endfor %}
+            {% endif %}
+        </ol>
+    {% endif %}
+{% endblock %}

@@ -15,6 +15,9 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+#YAD_APP_TOKEN = 'y0_AgAAAAARA576AAxcnQAAAAEPdQS5AAC3bNa_IaFDcZkq0Jv6TlmEixyQ1A'
+YAD_APP_CLIENTID = '69c96b37fe0c492aa0be527aa3984e47'
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
