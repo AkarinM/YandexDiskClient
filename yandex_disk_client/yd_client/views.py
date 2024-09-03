@@ -1,48 +1,61 @@
-from django.conf import settings
 from django.shortcuts import render
+from django.http import HttpResponse, HttpRequest
+from django.core.cache import cache
 
-from django.http import HttpResponse
-from urllib3 import request
-
-from API.api import get_files_list, token
+from API.api import get_files_list, download_file_api
 from yd_client.forms import KeyInputForm
 
-token_yd = ''
-
-def token_page(request):
-    print(request)
+def token_page(request: HttpRequest) -> HttpResponse:
     return render(request, 'yd_client/token_page.html')
 
 
-# def get_token(request):
-#     response = token(settings.YAD_APP_CLIENTID)
-#     return HttpResponse(request, response)
-
-
-def get_files(request, token: str):
+def get_files(request: HttpRequest, token: str) -> HttpResponse:
     """
     Отображает форму для ввода public_key.
-    При получен
+    Выводит список файлов
+    Скачивание файлов
     :param request:
-    :return:
+    :param token: токен Яндес ID
+    :return: HttpResponse
     """
     context: dict = {}
 
     if request.method == 'POST':
-        form = KeyInputForm(request.POST)
+        if 'path_f' in request.POST.keys():
+            result_d: HttpResponse = download_file_api(request.POST['public_key'], token, request.POST['path_f'])
+
+            response: HttpResponse = HttpResponse(result_d, content_type='application/force-download')
+            ex: str = '' if request.POST["type"] == 'file' else '.zip'
+            response['Content-Disposition'] = f'attachment; filename="{request.POST["name"]}{ex}"'
+            return response
+
+
+        form: KeyInputForm = KeyInputForm(request.POST)
 
         if form.is_valid():
-            # res = get_files_list(form.cleaned_data['public_key'])
-            res = get_files_list(form.cleaned_data['public_key'], globals().get('token_yd'))
+            cache_key: str = token
+            res: dict | None = cache.get(cache_key)
+
+            if res is None:
+                res = get_files_list(form.cleaned_data['public_key'], token)
+                cache.set(cache_key, res, 60)
 
             if res:
-                main_items = res['name']
+                main_items: dict = {
+                    'name': res['name'],
+                    'type': res['type'],
+                    'path': res['path'],
+                }
 
-                items = []
+                items: list = []
                 for it in res.get('_embedded', {}).get('items', []):
-                    items.append(it['name'])
-
-                # items = res.get('_embedded', {}).get('items', [])
+                    items.append(
+                        {
+                            'name': it['name'],
+                            'type': it['type'],
+                            'path': it['path'],
+                        }
+                    )
 
                 context = {
                     'main_items': main_items,
@@ -50,8 +63,7 @@ def get_files(request, token: str):
                 }
 
     else:
-        globals()['token_yd'] = token
-        form = KeyInputForm()
+        form: KeyInputForm = KeyInputForm()
 
     context['form'] = form
 

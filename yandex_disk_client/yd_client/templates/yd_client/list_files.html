@@ -3,6 +3,13 @@
 {% block title %}
     Файлы
 {% endblock %}
+{% block header %}
+    <style>
+        div {
+            display: inline-block;
+        }
+    </style>
+{% endblock %}
 
 {% block body %}
     <form action="" method="post">
@@ -13,13 +20,39 @@
         <input type="submit" value="Просмотреть ресурс" />
     </form>
 
-    {% if main_items %}
+{% if main_items %}
+        <hr />
         <ol>
-            <li> {{main_items}}</li>
+            <li> <div>{{main_items.name}}</div>
+            <div><form action="" method="post">
+                            {% csrf_token %}
+
+                            <input type="text" value="{{main_items.name}}" name="name" hidden="1"/>
+                            <input type="text" value="{{main_items.type}}" name="type" hidden="1"/>
+                            <input type="text" value="{{form.public_key.value}}" name="public_key" hidden="1"/>
+                            <input type="text" value="{{el.path}}" name="path_f" hidden="1"/>
+
+                            <input type="submit" value="Скачать" />
+            </form> </div>
+            </li>
             {% if items %}
+                <ol>
                 {% for el in items %}
-                   <li> {{el}}</li>
+                   <li>
+                       <div>{{el.name}}</div>
+                       <div><form action="" method="post">
+                            {% csrf_token %}
+
+                            <input type="text" value="{{el.name}}" name="name" hidden="1"/>
+                            <input type="text" value="{{el.type}}" name="type" hidden="1"/>
+                            <input type="text" value="{{form.public_key.value}}" name="public_key" hidden="1"/>
+                            <input type="text" value="{{el.path}}" name="path_f" hidden="1"/>
+
+                            <input type="submit" value="Скачать" />
+                       </form></div>
+                   </li>
                 {% endfor %}
+                </ol>
             {% endif %}
         </ol>
     {% endif %}
